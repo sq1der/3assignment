@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Погода</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Прогноз погоды</h1>
+    <nav>
+      <ul>
+        <li><a href="/">Главная</a></li>
+        <li><a href="/courses">Курсы</a></li>
+        <li><a href="/bmi">Калькулятор ИМТ</a></li>
+        <li><a href="/about">О нас</a></li>
+        <li><a href="/contact">Контакты</a></li>
+        <li><a href="/weather" class="active">Погода</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h2>Погодные данные</h2>
+  
+    <% if (weather) { %>
+      <div class="weather-card">
+        <h3><%= weather.city %> (<%= weather.country %>)</h3>
+        <img src="<%= weather.icon %>" alt="Иконка погоды">
+        <p>Температура: <%= weather.temperature %>°C</p>
+        <p>Ощущается как: <%= weather.feels_like %>°C</p>
+        <p>Описание: <%= weather.description %></p>
+        <p>Координаты: <%= weather.coordinates %></p>
+        <p>Влажность: <%= weather.humidity %>%</p>
+        <p>Давление: <%= weather.pressure %> hPa</p>
+        <p>Скорость ветра: <%= weather.wind_speed %> м/с</p>
+        <p>Дождь за последний: <%= weather.rain %> мм</p>
+      </div>
+    <% } else if (error) { %>
+      <p><%= error %></p>
+    <% } %>
+  </div>
+
+    <form method="GET" action="/weather" class="weather-form">
+      <label for="city">Введите название города:</label>
+      <input type="text" name="city" id="city" placeholder="Например, Астана">
+      <button type="submit">Узнать погоду</button>
+    </form>
+  </div>
+  <div id="map" style="height: 400px; margin-top: 20px; "></div>
+  <script>
+    var map = L.map('map').setView([51.09069161718531, 71.41817511525362], 15);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    L.marker([51.09069161718531, 71.41817511525362]).addTo(map)
+        .bindPopup('Вы здесь!')
+        .openPopup();
+  </script>
+
+  <%- include('footer') %>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>О нас</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header>
+    <h1>О нас</h1>
+    <nav>
+      <ul>
+        <li><a href="/">Главная</a></li>
+        <li><a href="/courses">Курсы</a></li>
+        <li><a href="/bmi">Калькулятор ИМТ</a></li>
+        <li><a href="/about" class="active">О нас</a></li>
+        <li><a href="/contact">Контакты</a></li>
+        <li><a href="/weather">Погода</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h2>Наша миссия</h2>
+    <p>Мы обучаем программированию и помогаем каждому стать успешным разработчиком!</p>
+    <p>Наши курсы подойдут для новичков и профессионалов, стремящихся улучшить свои навыки.</p>
+    <% if (quote) { %>
+      <div class="quote-section">
+        <blockquote>
+          <p>"<%= quote.text %>"</p>
+          <footer>— <%= quote.author %></footer>
+        </blockquote>
+      </div>
+    <% } else { %>
+      <p>Цитата недоступна. Попробуйте позже.</p>
+    <% } %>
+  </div>
+  
+  
+  <%- include('footer') %>
+
+</body>
+</html>
