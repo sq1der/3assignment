@@ -28,11 +28,11 @@ This platform provides an interactive environment for learning programming. It i
    ```
 2. Install dependencies:
    ```sh
-   npm install  # or yarn install
+   npm install 
    ```
 3. Start the development server:
    ```sh
-   npm run dev  # or yarn dev
+   node server.js
    ```
 4. Open `http://localhost:3000` in your browser.
 
