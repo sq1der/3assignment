@@ -6,6 +6,7 @@ const bmiRoutes = require('./routes/bmiRoutes');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
+const User = require('./models/User');
 require('dotenv').config();
 
 
@@ -83,11 +84,25 @@ app.post('/login', (req, res) => {
 });
 
 // Маршрут для страницы профиля
-app.get('/profile', (req, res) => {
-  if (req.session.loggedIn) {
-    res.render('profile', { title: 'Profile', loggedIn: req.session.loggedIn, username: req.session.username });
-  } else {
-    res.redirect('/login');
+app.get('/profile', async (req, res) => {
+  if (!req.session.loggedIn) {
+    return res.redirect('/login');
+  }
+
+  try {
+    const user = await User.findById(req.session.userId); // Найдите пользователя по ID из сессии
+    if (!user) {
+      return res.send('Пользователь не найден.');
+    }
+
+    res.render('profile', {
+      username: user.username,
+      email: user.email, // Передаем email в шаблон
+      isAdmin: user.isAdmin,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Ошибка сервера.');
   }
 });
 
@@ -115,6 +130,9 @@ app.get('/logout', (req, res) => {
     res.redirect('/login');
   });
 });
+
+const profileRoutes = require('./routes/profile');
+app.use('/profile', profileRoutes);
 
 // запуск сервера на порту 3000
 app.listen(port, () => {

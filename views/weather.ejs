@@ -15,10 +15,12 @@
       <ul>
         <li><a href="/">Главная</a></li>
         <li><a href="/courses">Курсы</a></li>
+        <li><a href="/compiler">Компилятор</a></li>
         <li><a href="/bmi">Калькулятор ИМТ</a></li>
         <li><a href="/about">О нас</a></li>
         <li><a href="/contact">Контакты</a></li>
         <li><a href="/weather" class="active">Погода</a></li>
+        <li><a href="/profile">Профиль</a></li>
       </ul>
     </nav>
   </header>
@@ -52,6 +54,9 @@
   </div>
   <div id="map" style="height: 400px; margin-top: 20px; "></div>
   <script>
+    <% if (weather) { %>
+      const lat = <%= weather.coord.lat %>;
+      const lon = <%= weather.coord.lon %>;
     var map = L.map('map').setView([51.09069161718531, 71.41817511525362], 15);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,

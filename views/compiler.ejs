@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Компилятор</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Компилятор кода</h1>
+    <nav>
+      <ul>
+        <li><a href="/">Главная</a></li>
+        <li><a href="/courses">Курсы</a></li>
+        <li><a href="/compiler" class="active">Компилятор</a></li>
+        <li><a href="/bmi">Калькулятор ИМТ</a></li>
+        <li><a href="/about">О нас</a></li>
+        <li><a href="/contact">Контакты</a></li>
+        <li><a href="/weather">Погода</a></li>
+        <li><a href="/profile">Профиль</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h2>Проверьте свой код</h2>
+    <form action="/compiler" method="POST">
+        <label for="code">Введите ваш код:</label><br>
+        <textarea name="code" id="code" rows="10" cols="50"></textarea><br><br>
+
+        <label for="language">Language:</label>
+        <select name="language" id="language">
+            <option value="python3">Python 3</option>
+            <option value="javascript">JavaScript</option>
+            <option value="java">Java</option>
+        </select><br><br>
+
+        <label for="input">Ввод (опционально):</label><br>
+        <textarea name="input" id="input" rows="5" cols="50"></textarea><br><br>
+
+        <button type="submit">Запустить</button>
+    </form>
+
+    <% if (typeof output !== 'undefined') { %>
+        <h3>Вывод:</h3>
+        <pre><%= output %></pre>
+    <% } %>
+    </div>
+    <%- include('footer') %>
+</body>
+</html>

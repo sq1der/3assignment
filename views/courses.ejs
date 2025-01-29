@@ -13,10 +13,12 @@
       <ul>
         <li><a href="/">Главная</a></li>
         <li><a href="/courses" class="active">Курсы</a></li>
+        <li><a href="/compiler">Компилятор</a></li>
         <li><a href="/bmi">Калькулятор ИМТ</a></li>
         <li><a href="/about">О нас</a></li>
         <li><a href="/contact">Контакты</a></li>
         <li><a href="/weather">Погода</a></li>
+        <li><a href="/profile">Профиль</a></li>
       </ul>
     </nav>
   </header>
@@ -29,6 +31,35 @@
       <li><a href="#">Мобильная разработка</a></li>
     </ul>
   </div>
+  <div class="container">
+    <form method="get" action="/courses" class="search-form">
+      <input type="text" name="search" value="<%= searchQuery %>" placeholder="Поиск книг...">
+      <button type="submit">Поиск</button>
+    </form>
+
+    <h2>Дополнительные материалы для изучения</h2>
+
+    <h3>Книги о <%= searchQuery %></h3>
+    <div class="books-container">
+      <% if (books.length > 0) { %>
+          <div class="book-cards">
+              <% books.forEach(function(book) { %>
+                  <div class="book-card">
+                    <a href="<%= book.link %>" target="_blank">
+                      <img src="<%= book.thumbnail %>" alt="<%= book.title %>" class="book-thumbnail">
+                    </a>
+                    <h3><%= book.title %></h3>
+                    <p><strong>Авторы:</strong> <%= book.authors.join(', ') %></p>
+                    <p class="book-description"><strong>Описание:</strong> <%= book.description %></p>
+                  </div>
+              <% }); %>
+          </div>
+      <% } else { %>
+          <p>Не найдено книг по теме: "<%= searchQuery %>".</p>
+      <% } %>
+  </div>
+</div>
+
   <%- include('footer') %>
 </body>
 </html>
