@@ -65,5 +65,12 @@ The project uses the following npm packages:
 
 Install these dependencies automatically during `npm install`.
 
+## Admin Access
+To access the admin panel, use the following credentials:
+
+- **Username:** AmanB  
+- **Password:** 1212  
+
+
 ## License
 MIT License © 2025 Programming Courses
