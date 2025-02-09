@@ -33,6 +33,7 @@ router.get('/courses', async (req, res) => {
   }
 });
 
+
 // Страница "О нас"
 router.get('/about', async (req, res) => {
   try {
@@ -50,53 +51,6 @@ router.get('/about', async (req, res) => {
 router.get('/contact', (req, res) => {
   res.render('contact');
 });
-
-
-// Страница погоды
-router.get('/weather', async (req, res) => {
-  const geoAPIKey = '1363562df9eb498eac3bf13ed8a8583b';
-  const weatherAPIKey = '9f9a8e09c5df05dbe4274f7a133ce4a0';
-
-  try {
-    let city = req.query.city;
-
-    if (!city) {
-      const geoResponse = await axios.get(
-        `https://ipgeolocation.abstractapi.com/v1/?api_key=${geoAPIKey}`
-      );
-      city = geoResponse.data.city;
-    }
-
-    // Погода
-    const weatherResponse = await axios.get(
-      `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${weatherAPIKey}&units=metric&lang=ru`
-    );
-
-    const weatherData = weatherResponse.data;
-
-    const weatherInfo = {
-      city: weatherData.name,
-      temperature: weatherData.main.temp,
-      feels_like: weatherData.main.feels_like,
-      description:
-        weatherData.weather[0].description.charAt(0).toUpperCase() +
-        weatherData.weather[0].description.slice(1),
-      icon: `http://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`,
-      coordinates: `Широта: ${weatherData.coord.lat}, Долгота: ${weatherData.coord.lon}`,
-      humidity: weatherData.main.humidity,
-      pressure: weatherData.main.pressure,
-      wind_speed: weatherData.wind.speed,
-      country: weatherData.sys.country,
-      rain: weatherData.rain ? weatherData.rain['1h'] || 0 : 0,
-    };
-
-    res.render('weather', { weather: weatherInfo });
-  } catch (error) {
-    console.error('Ошибка:', error.message);
-    res.render('weather', { error: 'Не удалось получить данные о погоде. Попробуйте позже.' });
-  }
-});
-
 
 // Компилятор
 router.get('/compiler', (req, res) => {
@@ -121,6 +75,63 @@ router.post('/compiler', async (req, res) => {
   }
 });
 
+// Обсуждаемые темы (3 апи)
+router.get('/topic', async (req, res) => {
+  try {
+    //StackOverflow API
+    const stackResponse = await axios.get('https://api.stackexchange.com/2.3/questions', {
+      params: {
+        order: 'desc',
+        sort: 'votes',
+        site: 'stackoverflow',
+        filter: '!9_bDE(fI5',
+        pagesize: 6
+      }
+    });
+    const stackQuestions = stackResponse.data.items.map(question => ({
+      title: question.title,
+      url: question.link,
+      author: question.owner.display_name,
+      score: question.score,
+      answers: question.answer_count,
+    }));
+
+    //dev.to API
+    const devResponse = await axios.get('https://dev.to/api/articles?per_page=6');
+    const devArticles = devResponse.data.map(article => ({
+      title: article.title,
+      url: article.url,
+      image: article.social_image || '/default-news.jpg',
+      author: article.user.name,
+      date: new Date(article.published_at).toLocaleDateString(),
+      description: article.description || 'Описание отсутствует.'
+    }));
+
+    //GitHub API
+    const githubResponse = await axios.get('https://api.github.com/search/repositories', {
+      params: {
+        q: 'stars:>10000',
+        sort: 'stars',
+        order: 'desc',
+        per_page: 6
+      }
+    });
+    const githubRepos = githubResponse.data.items.map(repo => ({
+      name: repo.name,
+      url: repo.html_url,
+      description: repo.description || 'Описание отсутствует.',
+      stars: repo.stargazers_count,
+      forks: repo.forks_count,
+      language: repo.language || 'Не указан',
+      owner: repo.owner.login
+    }));
+
+    res.render('topic', { stackQuestions, devArticles, githubRepos, error: null });
+  } catch (error) {
+    console.error('Ошибка получения данных:', error.message);
+    res.render('topic', { stackQuestions: [], devArticles: [], githubRepos: [], error: 'Не удалось загрузить данные.' });
+  }
+});
 
 
 module.exports = router;

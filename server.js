@@ -58,7 +58,11 @@ app.use('/', adminRoutes);
 
 // мейн стр
 app.get('/', (req, res) => {
-  res.render('index', { title: 'Home', loggedIn: req.session.loggedIn || false });
+  res.render('index', {
+    title: 'Home',
+    loggedIn: req.session.loggedIn || false,
+    __: res.__
+  });
 });
 
 app.get('/login', (req, res) => {
@@ -133,6 +137,10 @@ app.get('/logout', (req, res) => {
 
 const profileRoutes = require('./routes/profile');
 app.use('/profile', profileRoutes);
+
+const itemRoutes = require('./routes/itemRoutes');
+app.use('/api/items', itemRoutes);
+
 
 // запуск сервера на порту 3000
 app.listen(port, () => {

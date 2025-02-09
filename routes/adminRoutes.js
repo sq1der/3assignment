@@ -1,5 +1,6 @@
 const express = require('express');
 const User = require('../models/User');
+const Item = require("../models/Item");
 const bcrypt = require('bcryptjs');
 const router = express.Router();
 
@@ -13,7 +14,8 @@ function isAdmin(req, res, next) {
 
 router.get('/admin', isAdmin, async (req, res) => {
   const users = await User.find({});
-  res.render('admin', { title: 'Панель администратора', users });
+  const items = await Item.find();
+  res.render('admin', { title: 'Панель администратора', users, items  });
 });
 
 
@@ -42,6 +44,43 @@ router.post('/admin/edit/:id', isAdmin, async (req, res) => {
     isAdmin: !!isAdmin, 
     updatedAt: new Date() });
   res.redirect('/admin');
+});
+
+router.post('/items/add', async (req, res) => {
+  try {
+      const { name, price, imageUrl, description } = req.body;
+      const newItem = new Item({ name, price, imageUrl, description });
+      await newItem.save();
+      res.redirect('/admin'); // Перенаправляем обратно в админ-панель
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Ошибка при добавлении товара');
+  }
+});
+
+router.post('/admin/items/add', async (req, res) => {
+  try {
+      const { name, price, imageUrl, description } = req.body;
+      const newItem = new Item({ name, price, imageUrl, description });
+      await newItem.save();
+      res.redirect('/admin'); // Перенаправляем обратно на админ-панель
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Ошибка при добавлении товара');
+  }
+});
+
+
+
+router.post("/admin/items/delete/:id", async (req, res) => {
+  await Item.findByIdAndDelete(req.params.id);
+  res.redirect("/admin");
+});
+
+// Обновление товара
+router.post("/admin/items/edit/:id", async (req, res) => {
+  await Item.findByIdAndUpdate(req.params.id, req.body);
+  res.redirect("/admin");
 });
 
 module.exports = router;

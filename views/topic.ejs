@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Обсуждаемые темы</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="/">Главная</a></li>
+        <li><a href="/courses">Курсы</a></li>
+        <li><a href="/compiler">Компилятор</a></li>
+        <li><a href="/bmi">Калькулятор ИМТ</a></li>
+        <li><a href="/topic" class=active>Полезное</a></li>
+        <li><a href="/about">О нас</a></li>
+        <li><a href="/contact">Контакты</a></li>
+        <li><a href="/profile">Профиль</a></li>
+      </ul>
+    </nav>
+  </header>
+  <h1>Полезные ссылки</h1>
+
+  <div class="container">
+
+    <% if (error) { %>
+      <p class="error"><%= error %></p>
+    <% } else { %>
+
+      <section class="so-section">
+        <h2>&#128293; Топ вопросов с StackOverflow</h2>
+        <ul class="so-list">
+          <% stackQuestions.forEach(question => { %>
+            <li class="so-item">
+              <a href="<%= question.url %>" target="_blank"><%= question.title %></a>
+              <div class="so-meta">
+                <span>Автор: <%= question.author %></span> |
+                <span>Оценка: <%= question.score %></span> |
+                <span>Ответы: <%= question.answers %></span>
+              </div>
+            </li>
+          <% }); %>
+        </ul>
+      </section>
+
+      <section class="devto-section">
+        <h2>&#128214; Свежие статьи с dev.to</h2>
+        <div class="devto-grid">
+          <% devArticles.forEach(article => { %>
+            <div class="devto-card">
+              <img src="<%= article.image %>" alt="<%= article.title %>">
+              <div class="devto-content">
+                <h3><a href="<%= article.url %>" target="_blank"><%= article.title %></a></h3>
+                <p><%= article.description.substring(0, 100) %>...</p>
+                <div class="devto-meta">
+                  <span>Автор: <%= article.author %></span> |
+                  <span>Дата: <%= article.date %></span>
+                </div>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      </section>
+
+      <section class="github-section">
+        <h2>&#128187; Популярные репозитории на GitHub</h2>
+        <div class="github-grid">
+          <% githubRepos.forEach(repo => { %>
+            <div class="github-card">
+              <h3><a href="<%= repo.url %>" target="_blank"><%= repo.name %></a></h3>
+              <p><%= repo.description %></p>
+              <div class="github-meta">
+                <span>Автор: <%= repo.owner %></span> |
+                <span>&#127775; <%= repo.stars %></span> |
+                <span>&#127860; <%= repo.forks %></span> |
+                <span>Язык: <%= repo.language %></span>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      </section>
+
+    <% } %>
+
+  </div>
+  
+  <%- include('footer') %>
+
+</body>
+</html>

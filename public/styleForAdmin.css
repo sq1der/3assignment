@@ -14,31 +14,15 @@ header {
     text-align: center;
 }
 
-/* Стили для кнопки "Главная" */
-.nav-button {
-    display: inline-block;
-    background: #1d3557;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 16px;
-    transition: 0.3s;
-}
-
-.nav-button:hover {
-    background: #457b9d;
-}
-
-
+/* Навигация */
 nav ul {
     list-style: none;
     padding: 0;
+    text-align: center;
 }
 
 nav ul li {
-    display: inline;
+    display: inline-block;
     margin: 0 10px;
 }
 
@@ -50,13 +34,14 @@ nav ul li a {
     padding: 10px 20px;
     border-radius: 5px;
     transition: background-color 0.3s ease, transform 0.2s ease;
-  }
+}
+
 nav ul li a.active {
     background-color: white;
     color: #1d3557;
     font-weight: bold;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
+}
 
 /* Основной контейнер */
 .admin-panel {
@@ -68,38 +53,35 @@ nav ul li a.active {
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Секция добавления пользователей */
-.add-user h2 {
+/* Разделы */
+h2 {
     text-align: center;
-    margin-bottom: 20px;
+    color: #1d3557;
 }
 
+/* Формы */
 form {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    max-width: 400px;
+    max-width: 500px;
     margin: 0 auto;
+    padding: 10px;
 }
 
-.form-group {
-    display: flex;
-    flex-direction: column;
-}
-
-label {
-    font-weight: bold;
-}
-
+/* Поля ввода */
 input[type="text"],
 input[type="email"],
-input[type="password"] {
+input[type="password"],
+input[type="number"],
+textarea {
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    width: 100%;
 }
 
-/* Чекбокс */
+/* Чекбоксы */
 input[type="checkbox"] {
     margin-right: 5px;
 }
@@ -113,10 +95,11 @@ button {
     cursor: pointer;
     border-radius: 5px;
     font-size: 16px;
+    transition: background 0.3s ease;
 }
 
 button:hover {
-    background: #0056b3;
+    background: #457b9d;
 }
 
 /* Красная кнопка удаления */
@@ -128,7 +111,7 @@ button.danger:hover {
     background: #a71d2a;
 }
 
-/* Стили для таблицы */
+/* Таблица */
 .table {
     width: 100%;
     border-collapse: collapse;
@@ -147,20 +130,49 @@ button.danger:hover {
     color: white;
 }
 
-.table td {
-    background: #fff;
-}
-
 /* Форма редактирования в таблице */
 .table input[type="text"] {
     width: 100px;
 }
 
+/* Формы в таблице */
 .table form {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 5px;
+}
+
+/* Список товаров */
+#itemList {
+    list-style: none;
+    padding: 0;
+}
+
+#itemList li {
+    background: white;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 15px;
+}
+
+#itemList img {
+    max-width: 100px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Формы в списке товаров */
+#itemList form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
 }
 
 /* Адаптивность */
@@ -171,5 +183,15 @@ button.danger:hover {
 
     .table {
         font-size: 14px;
+    }
+
+    #itemList li {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    #itemList img {
+        width: 80px;
     }
 }
