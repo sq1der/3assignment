@@ -40,37 +40,6 @@ This platform provides an interactive environment for learning programming. It i
 - **MongoDB as Database**: Chosen for scalability and flexibility.
 - **Node.js & Express for Backend**: Efficient API handling.
 
-
-## Project Structure
-
-```
-project-directory
-├── public
-│   └── style.css             # Main stylesheet
-├── routes
-│   ├── bmiRoutes.js          # Handles BMI calculator routes
-│   └── courseRoutes.js       # Handles course-related routes
-├── views
-│   ├── index.ejs             # Homepage template
-│   ├── courses.ejs           # Courses page template
-│   ├── about.ejs             # About page
-│   ├── contact.ejs           # Contact page with API
-│   ├── footer.ejs            # Footer for pages
-│   ├── weather.ejs           # Weather page with API
-│   └── bmi.ejs               # BMI calculator template
-└── server.js                 # Main server setup file
-```
-
-## Dependencies
-The project uses the following npm packages:
-
-- **express**: A web framework for Node.js.
-- **ejs**: Template engine for rendering dynamic HTML.
-- **body-parser**: Middleware for parsing request bodies.
-
-Install these dependencies automatically during `npm install`.
-
-
 ## Admin Access
 To access the admin panel, use the following credentials:
 
