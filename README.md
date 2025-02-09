@@ -40,5 +40,12 @@ This platform provides an interactive environment for learning programming. It i
 - **MongoDB as Database**: Chosen for scalability and flexibility.
 - **Node.js & Express for Backend**: Efficient API handling.
 
+## Admin Access
+To access the admin panel, use the following credentials:
+
+- **Username:** AmanB  
+- **Password:** 1212  
+
+
 ## License
 MIT License © 2025 Programming Courses
