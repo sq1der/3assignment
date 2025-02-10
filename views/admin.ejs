@@ -90,45 +90,74 @@
 
     <!-- Управление товарами -->
     <div class="container">
-      <h1>Управление товарами</h1>
-
       <!-- Форма для добавления нового товара -->
-      <h2>Добавить новый товар</h2>
+      <h2>Добавить новый айтем</h2>
       <form action="/admin/items/add" method="POST">
-        <input type="text" name="name" placeholder="Название" required>
-        <input type="number" name="price" placeholder="Цена" required>
-        <input type="text" name="imageUrl" placeholder="Ссылка на изображение">
-        <textarea name="description" placeholder="Описание"></textarea>
-        <button type="submit">Добавить товар</button>
-      </form>
+        <label>Название (английский):</label>
+        <input type="text" name="name_en" required>
+    
+        <label>Название (другой язык):</label>
+        <input type="text" name="name_other" required>
+    
+        <label>Описание (английский):</label>
+        <textarea name="description_en" required></textarea>
+    
+        <label>Описание (другой язык):</label>
+        <textarea name="description_other" required></textarea>
+    
+        <label>Картинки (Вставьте 3 URLs)</label>
+        <input type="text" name="image1" class="form-control" placeholder="Image 1 URL" required>
+        <input type="text" name="image2" class="form-control" placeholder="Image 2 URL" required>
+        <input type="text" name="image3" class="form-control" placeholder="Image 3 URL" required>
+    
+        <button type="submit">Добавить</button>
+    </form>
 
       <hr>
 
       <!-- Список товаров -->
-      <h2>Список товаров</h2>
-      <ul id="itemList">
-        <% items.forEach(item => { %>
-          <li>
-            <strong><%= item.name %></strong> - <%= item.price %>₸
-            <p><%= item.description %></p>
-            <img src="<%= item.imageUrl %>" width="100" alt="Изображение">
-
-            <!-- Форма для удаления товара -->
-            <form action="/admin/items/delete/<%= item._id %>" method="POST" style="display: inline;">
-              <button type="submit" class="button danger">❌ Удалить</button>
-            </form>
-
-            <!-- Форма для редактирования товара -->
-            <form action="/admin/items/edit/<%= item._id %>" method="POST" style="display: inline;">
-              <input type="text" name="name" value="<%= item.name %>" required>
-              <input type="number" name="price" value="<%= item.price %>" required>
-              <input type="text" name="imageUrl" value="<%= item.imageUrl %>">
-              <textarea name="description"><%= item.description %></textarea>
-              <button type="submit" class="button">✏️ Обновить</button>
-            </form>
-          </li>
-        <% }) %>
-      </ul>
+      <h2>Управление айтемами</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th>Описание</th>
+                <th>Картинки</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% items.forEach(item => { %>
+                <tr>
+                    <td><%= item.name_en %> / <%= item.name_other %></td>
+                    <td><%= item.description_en %></td>
+                    <td>
+                        <img src="<%= item.images[0] %>" width="50">
+                        <img src="<%= item.images[1] %>" width="50">
+                        <img src="<%= item.images[2] %>" width="50">
+                    </td>
+                    <td>
+                        <!-- Edit Form -->
+                        <form action="/admin/items/edit/<%= item._id %>" method="POST" style="display:inline;">
+                        <form action="/admin/items/edit/<%= item._id %>" method="POST" style="display: inline;">
+                          <input type="text" name="name_en" value="<%= item.name_en %>" required />
+                        <form action="/admin/items/edit/<%= item._id %>" method="POST" style="display: inline;">
+                          <input type="text" name="name_other" value="<%= item.name_other %>" required />
+                        <form action="/admin/items/edit/<%= item._id %>" method="POST" style="display: inline;">
+                          <input type="text" name="description_en" value="<%= item.description_en %>" required />
+                        <form action="/admin/items/edit/<%= item._id %>" method="POST" style="display: inline;">
+                            <input type="text" name="description_other" value="<%= item.description_other %>" required />
+                            <button type="submit" class="btn btn-warning">Обновить</button>
+                        </form>
+                        <!-- Delete Form -->
+                        <form action="/admin/items/delete/<%= item._id %>" method="POST" style="display:inline;">
+                            <button type="submit" class="button danger">Удалить</button>
+                        </form>
+                    </td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
     </div>
   </main>
 </body>

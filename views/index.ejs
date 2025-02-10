@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Курсы по программированию</title>
-  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/stylesForMain.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body>
   <header>
@@ -14,7 +15,6 @@
         <li><a href="/" class="active">Главная</a></li>
         <li><a href="/courses">Курсы</a></li>
         <li><a href="/compiler">Компилятор</a></li>
-        <li><a href="/bmi">Калькулятор ИМТ</a></li>
         <li><a href="/topic">Полезное</a></li>
         <li><a href="/about">О нас</a></li>
         <li><a href="/contact">Контакты</a></li>
@@ -28,11 +28,43 @@
     <p>Изучите основы программирования, веб-разработки, Python и JavaScript с нами!</p>
     <p><a href="/courses">Посмотреть курсы</a></p>
 
-    <h3>Калькулятор ИМТ</h3>
-    <p>Проверите ваш индекс массы тела, чтобы улучшить здоровье в процессе обучения!</p>
-    <a href="/bmi">Перейти к калькулятору ИМТ</a>
+    <h3>Новости мира IT</h3>
+    <p>Читайте свежие новости в вашей любимой сфере!</p>
+    <a href="/topic">Перейти!!</a>
   </div>
+  <h2>Library Collection</h2>
+        <div class="row">
+            <% items.forEach(item => { %>
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <!-- Bootstrap Carousel -->
+                        <div id="carousel<%= item._id %>" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                <% item.images.forEach((img, index) => { %>
+                                    <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                                        <img src="<%= img %>" class="d-block w-100" alt="Item Image">
+                                    </div>
+                                <% }); %>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carousel<%= item._id %>" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carousel<%= item._id %>" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            </button>
+                        </div>
+
+                        <!-- Item Details -->
+                        <div class="card-body">
+                            <h5 class="card-title"><%= item.name_en %> / <%= item.name_other %></h5>
+                            <p class="card-text"><%= item.description_en %></p>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
 </div>
   <%- include('footer') %>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> <!-- ✅ Bootstrap JS for carousel -->
 </body>
 </html>

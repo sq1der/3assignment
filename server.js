@@ -1,108 +1,85 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const courseRoutes = require('./routes/courseRoutes');
-const bmiRoutes = require('./routes/bmiRoutes');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
+
+const courseRoutes = require('./routes/courseRoutes');
+const authRoutes = require('./routes/authRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+const profileRoutes = require('./routes/profile');
+
 const User = require('./models/User');
-require('dotenv').config();
-
-
+const Item = require('./models/Item');
 
 const app = express();
 const port = 3000;
-
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-
-// устанавливаем EJS как движок шаблонов
-app.set('view engine', 'ejs');
-
-// указываем папку с шаблонами
-app.set('views', path.join(__dirname, 'views'));
-
-// подключаем папку public для css файлов
-app.use(express.static('public'));
-
-// подключаем маршруты
-app.use('/', courseRoutes);
-app.use('/', bmiRoutes);
-
-
 const dbURI = 'mongodb+srv://aman:0909@cluster0.asuht.mongodb.net/Cluster0?retryWrites=true&w=majority&appName=Cluster0';
 
-mongoose.connect(dbURI, {
-    dbName: 'usersDB', // Укажите имя вашей базы данных
-}).then(() => console.log('Connected to MongoDB'))
+// Подключение к MongoDB
+mongoose.connect(dbURI, { dbName: 'usersDB' })
+  .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('MongoDB connection error:', err));
 
+// Настройка middleware
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.static('public'));
+
+// Настройка движка шаблонов
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+// Настройка сессий
 app.use(session({
-  secret: '0909', // Секрет для сессий
+  secret: '0909',
   resave: false,
   saveUninitialized: false,
-  store: MongoStore.create({ 
-    mongoUrl: dbURI, // Строка подключения к MongoDB
-    collectionName: 'sessions', // Название коллекции для хранения сессий
-  }),
+  store: MongoStore.create({ mongoUrl: dbURI, collectionName: 'sessions' })
 }));
 
-
-
-const authRoutes = require('./routes/authRoutes');
-const adminRoutes = require('./routes/adminRoutes');
-
+// Подключение маршрутов
+app.use('/', courseRoutes);
 app.use('/', authRoutes);
 app.use('/', adminRoutes);
+app.use('/profile', profileRoutes);
 
-// мейн стр
-app.get('/', (req, res) => {
-  res.render('index', {
-    title: 'Home',
-    loggedIn: req.session.loggedIn || false,
-    __: res.__
-  });
+// Главная страница
+app.get('/', async (req, res) => {
+  try {
+    const items = await Item.find();
+    res.render('index', { items });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Ошибка загрузки элементов');
+  }
 });
 
-app.get('/login', (req, res) => {
-  res.render('login', { title: 'Login', loggedIn: req.session.loggedIn });
-});
-
+// Страница логина
 app.get('/login', (req, res) => {
   res.render('login', { title: 'Login', loggedIn: req.session.loggedIn || false });
 });
 
-
-// Обработка формы логина
-app.post('/login', (req, res) => {
-  const { username, password } = req.body;
-  // Простая проверка логина и пароля
-  if (username === 'user' && password === 'password') {
-    req.session.loggedIn = true;
-    req.session.username = username;
-    res.redirect('/profile');
-  } else {
-    res.send('Invalid credentials');
-  }
+// Страница регистрации
+app.get('/signup', (req, res) => {
+  res.render('signup', { title: 'Sign Up', loggedIn: req.session.loggedIn });
 });
 
-// Маршрут для страницы профиля
+// Страница профиля
 app.get('/profile', async (req, res) => {
-  if (!req.session.loggedIn) {
-    return res.redirect('/login');
-  }
+  if (!req.session.loggedIn) return res.redirect('/login');
 
   try {
-    const user = await User.findById(req.session.userId); // Найдите пользователя по ID из сессии
-    if (!user) {
-      return res.send('Пользователь не найден.');
-    }
+    const user = await User.findById(req.session.userId);
+    if (!user) return res.send('Пользователь не найден.');
 
     res.render('profile', {
       username: user.username,
-      email: user.email, // Передаем email в шаблон
-      isAdmin: user.isAdmin,
+      email: user.email,
+      isAdmin: user.isAdmin
     });
   } catch (error) {
     console.error(error);
@@ -110,39 +87,15 @@ app.get('/profile', async (req, res) => {
   }
 });
 
-// Маршрут для страницы регистрации
-app.get('/signup', (req, res) => {
-  res.render('signup', { title: 'Sign Up', loggedIn: req.session.loggedIn });
-});
-
-// Обработка формы регистрации
-app.post('/signup', (req, res) => {
-  const { username, email, password, confirmPassword } = req.body;
-  if (password !== confirmPassword) {
-    return res.send('Passwords do not match.');
-  }
-  console.log('New user:', { username, email, password });
-  res.redirect('/login');
-});
-
-// Маршрут для выхода
+// Выход из системы
 app.get('/logout', (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      return res.redirect('/profile');
-    }
+  req.session.destroy(err => {
+    if (err) return res.redirect('/profile');
     res.redirect('/login');
   });
 });
 
-const profileRoutes = require('./routes/profile');
-app.use('/profile', profileRoutes);
-
-const itemRoutes = require('./routes/itemRoutes');
-app.use('/api/items', itemRoutes);
-
-
-// запуск сервера на порту 3000
+// Запуск сервера
 app.listen(port, () => {
   console.log(`Сервер работает на порту ${port}`);
 });
